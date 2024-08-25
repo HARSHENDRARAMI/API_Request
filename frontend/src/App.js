@@ -7,7 +7,7 @@ function App() {
 
     const handleSubmit = async () => {
         try {
-            const res = await fetch('E:\\Harshendra\\Codings\\PYTHON\\Projects\\bajaj_finserv\\index.js', {
+            const res = await fetch('https://api-request-8w0v.onrender.com', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
