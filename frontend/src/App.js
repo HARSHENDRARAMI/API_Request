@@ -4,10 +4,28 @@ function App() {
     const [jsonInput, setJsonInput] = useState('');
     const [response, setResponse] = useState(null);
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const [isJsonValid, setIsJsonValid] = useState(true);
+    const [error, setError] = useState(null);
+
+    const validateJson = (input) => {
+        try {
+            JSON.parse(input);
+            setIsJsonValid(true);
+        } catch (e) {
+            setIsJsonValid(false);
+        }
+    };
+
+    const handleJsonChange = (e) => {
+        const input = e.target.value;
+        setJsonInput(input);
+        validateJson(input);
+    };
 
     const handleSubmit = async () => {
+        setError(null);
         try {
-            const res = await fetch('https://api-request-8w0v.onrender.com', {
+            const res = await fetch('https://api-request-8w0v.onrender.com/bfhl', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -17,6 +35,7 @@ function App() {
             const data = await res.json();
             setResponse(data);
         } catch (error) {
+            setError('There was an issue with the request. Please try again.');
             console.error('Error:', error);
         }
     };
@@ -35,17 +54,19 @@ function App() {
                 rows="10"
                 cols="50"
                 value={jsonInput}
-                onChange={(e) => setJsonInput(e.target.value)}
+                onChange={handleJsonChange}
                 placeholder='Enter JSON here...'
             />
+            {!isJsonValid && <p style={{ color: 'red' }}>Invalid JSON format</p>}
             <br />
-            <button onClick={handleSubmit}>Submit</button>
+            <button onClick={handleSubmit} disabled={!isJsonValid}>Submit</button>
             <br />
             <select multiple={true} onChange={handleOptionChange}>
                 <option value="numbers">Numbers</option>
                 <option value="alphabets">Alphabets</option>
                 <option value="highest_lowercase_alphabet">Highest Lowercase Alphabet</option>
             </select>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             {response && (
                 <div>
                     <h2>Response:</h2>
